@@ -7,54 +7,80 @@ struct Object {
 
 
 fn main() {
-    println!("Testing Git Functions From Scratch (NO AI)");
+    println!("Testing Git Functions From Scratch (NO AI)\n");
     
     // Dummy test case
+    let mut obj0 = Object{var: 5324987, key: 0};
     let mut local:Vec<Object> = vec![];
-    let mut server:Vec<Object> = vec![Object{var: 5324987, key: 0}];
-    let mut obj: Object = Object { var: 234783, key: 1 };
+    let mut server:Vec<Object> = vec![];
+    let mut obj1: Object = Object { var: 234783, key: 1 };
+    server.push(obj0);
     
-    println!("Object with key 1 is: {:?}", obj); 
+    println!("----- Starting State -----");
+    println!("Object with key 1 is: {:?}", obj1); 
     println!("Server state has: {:?}", server);
-    println!("Local state has: {:?}", local);
+    println!("Local state has: {:?}\n", local);
 
     //changing obj to a new var w/ same key
-    obj.var = 23;
+    obj1.var = 23;
 
-    Branch::commit(local, obj);
+    Branch::add(&mut local, obj1);
+    println!("----- After Adding Files to Payload (local) -----");
+    println!("Object with key 1 is: {:?}", local[0]); 
+    println!("Server state has: {:?}", server);
+    println!("Local state has: {:?}\n", local);
+
+    let string = Branch::commit(&mut local);
     println!("----- After Commit -----");
-    println!("Object with key 1 is: {:?}", obj); 
+    println!("Object with key 1 is: {:?}", string); 
     println!("Server state has: {:?}", server);
-    println!("Local state has: {:?}", local);
+    println!("Local state has: {:?}\n", local);
 
-    // Branch::push(server, obj.clone());
-    println!("----- After Pushing W/ Update -----");
-    println!("Object with key 1 is: {:?}", obj); 
+    Branch::push(&mut server, &mut local);
+    println!("----- After Pushing W/ Update -----"); 
     println!("Server state has: {:?}", server);
-    println!("Local state has: {:?}", local);
+    println!("Local state has: {:?}\n", local);
 
-    // Branch::pull(server, 1);
-    println!("----- After Pulling -----");
-    println!("Object with key 1 is: {:?}", obj); 
-    println!("Server state has: {:?}", server);
-    println!("Local state has: {:?}", local);
+    // // Branch::pull(server, 1);
+    // Branch::pull(server, 0);
+    // println!("----- After Pulling -----");
+    // println!("Object with key 1 is: {:?}", obj1); 
+    // println!("Server state has: {:?}", server);
+    // println!("Local state has: {:?}\n", local);
 }
 
 mod Branch {
     use crate::Object;
 
-    pub fn pull(mut server: Vec<Object>, key_value: i32) -> Option<Object> {
-        
-        if let Some(obj:Object) = server.into_iter().find(|x| x.key == key_value).or(None);
-    }
-
-    pub fn push(mut server: Vec<Object>, obj: Object) {
-        // Assume we want to push to the server state
-        server.push(obj);
-    }
-
-    pub fn commit(mut local: Vec<Object>, obj: Object) {
-        // Save all final changes to the local state
+    // add a file locally to the branch
+    pub fn add(local: &mut Vec<Object>, obj: Object) {
         local.push(obj);
+    }
+    
+    // pull anything from a server given a key
+    pub fn pull(server: &mut Vec<Object>, key_value: i32) -> Option<Object> {
+       
+        // if let Some(obj::Object) = server.into_iter().find(|x| x.key == key_value).or(None);
+        // pull a certain object from server to local
+
+        
+
+        None
+    }
+
+    // push any changes from a branch to a server
+    pub fn push(server: &mut Vec<Object>, local: &mut Vec<Object>) {
+        // Get payload state and push it to server
+        
+        // push all objects from local to server
+        for item in local {
+            server.push(item.clone())
+        }
+    }
+
+    // write a commit message
+    pub fn commit(local: &mut Vec<Object>) -> String {
+        // Save all final changes to the local state
+        String::from("pushed some new features")    
     }    
 }
