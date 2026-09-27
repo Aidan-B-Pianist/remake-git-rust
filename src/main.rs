@@ -41,12 +41,11 @@ fn main() {
     println!("Server state has: {:?}", server);
     println!("Local state has: {:?}\n", local);
 
-    // // Branch::pull(server, 1);
-    // Branch::pull(server, 0);
-    // println!("----- After Pulling -----");
-    // println!("Object with key 1 is: {:?}", obj1); 
-    // println!("Server state has: {:?}", server);
-    // println!("Local state has: {:?}\n", local);
+    // Branch::pull(server, 1);
+    Branch::pull(&mut server, &mut local);
+    println!("----- After Pulling -----");
+    println!("Server state has: {:?}", server);
+    println!("Local state has: {:?}\n", local);
 }
 
 mod Branch {
@@ -58,14 +57,18 @@ mod Branch {
     }
     
     // pull anything from a server given a key
-    pub fn pull(server: &mut Vec<Object>, key_value: i32) -> Option<Object> {
+    pub fn pull(server: &mut Vec<Object>, local: &mut Vec<Object>) {
        
-        // if let Some(obj::Object) = server.into_iter().find(|x| x.key == key_value).or(None);
-        // pull a certain object from server to local
+        // pull all objects from server to home state
 
-        
+        for item in server {
+            let local_key = item.key;
+            if(local.iter().any(|x| x.key == local_key)) {
+                local.pop();
+            }
+            local.push(item.clone());
+        }
 
-        None
     }
 
     // push any changes from a branch to a server
@@ -73,10 +76,16 @@ mod Branch {
         // Get payload state and push it to server
         
         // push all objects from local to server
-        for item in local {
-            server.push(item.clone())
+        // get key and if it's in server already, overwrite it
+         for item in local {
+            let local_key = item.key;
+            if(server.iter().any(|x| x.key == local_key)) {
+                server.pop();
+            }
+            server.push(item.clone());
         }
-    }
+
+        }
 
     // write a commit message
     pub fn commit(local: &mut Vec<Object>) -> String {
