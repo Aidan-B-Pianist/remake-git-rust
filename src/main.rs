@@ -13,7 +13,7 @@ fn main() {
     let mut obj0 = Object{var: 5324987, key: 0};
     let mut local:Vec<Object> = vec![];
     let mut server:Vec<Object> = vec![];
-    let mut obj1: Object = Object { var: 234783, key: 1 };
+    let mut obj1: Object = Object { var: 234783, key: 1,};
     server.push(obj0);
     
     println!("----- Starting State -----");
@@ -30,7 +30,7 @@ fn main() {
     println!("Server state has: {:?}", server);
     println!("Local state has: {:?}\n", local);
 
-    let string = Branch::commit(&mut local);
+    let string = Branch::commit();
     println!("----- After Commit -----");
     println!("Object with key 1 is: {:?}", string); 
     println!("Server state has: {:?}", server);
@@ -81,15 +81,15 @@ mod Branch {
             let local_key = item.key;
             if(server.iter().any(|x| x.key == local_key)) {
                 server.pop();
+ 
             }
             server.push(item.clone());
         }
-
-        }
+    }
 
     // write a commit message
-    pub fn commit(local: &mut Vec<Object>) -> String {
+    pub fn commit() -> String {
         // Save all final changes to the local state
-        String::from("pushed some new features")    
+        String::from("pushed some new features")
     }    
 }
