@@ -11,7 +11,7 @@ use std::{collections::HashMap, hash::Hash, vec};
 // Repository needs a staged, commits, and head, having methods such as repo.add and repo.commit("msg")
 
 #[derive(Debug)]
-struct Commit {
+pub struct Commit {
     snapshot: HashMap<i32, i64>,
     message: String,
     parent: Option<usize>
@@ -29,12 +29,18 @@ impl Repository {
         Repository { staged: HashMap::new(), commits: vec![], head: None }
     }
 
-    pub fn add() {
-
+    pub fn add(staged: HashMap<i32, i64>, commits: Vec<Commit>, head: Option<usize>) -> Repository {
+        Repository { staged: staged, commits: commits, head: head }
     }
 
     pub fn commit() {
     
+    }
+}
+
+impl Commit {
+    pub fn new () -> Commit {
+        Commit { snapshot: HashMap::new(), message: String::from(""), parent: None }
     }
 }
 // mod Branch {
